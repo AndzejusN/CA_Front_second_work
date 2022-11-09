@@ -129,19 +129,15 @@ function generatePaginationToDom(_x3) {
 }
 function _generatePaginationToDom() {
   _generatePaginationToDom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(dataToPagination) {
-    var currentPage, appendDomTag, source, numberPerPage, queryString, dataTotal, total, paginationWrapper, limit, pages, i, span, a, _span, _a, _span2, _a2, _span3, _a3, _span4, _a4, perPageContainerDom, linkPerPageFive, linkPerPageTen, linkPerPageTwenty;
+    var currentPage, appendDomTag, numberPerPage, total, queryString, paginationWrapper, limit, pages, i, span, a, _span, _a, _span2, _a2, _span3, _a3, _span4, _a4, perPageContainerDom, linkPerPageFive, linkPerPageTen, linkPerPageTwenty;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, source = dataToPagination.source, numberPerPage = dataToPagination.numberPerPage;
+            currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, numberPerPage = dataToPagination.numberPerPage, total = dataToPagination.total;
             currentPage = parseInt(currentPage);
             queryString = window.location.pathname;
-            _context2.next = 5;
-            return fetchData(source);
-          case 5:
-            dataTotal = _context2.sent;
-            total = dataTotal.length;
+            total = total.toString();
             paginationWrapper = document.createElement('div');
             paginationWrapper.style.width = '100%';
             paginationWrapper.style.display = 'flex';
@@ -268,7 +264,7 @@ function _generatePaginationToDom() {
             linkPerPageTwenty.style.margin = '0 3px';
             perPageContainerDom.append(linkPerPageTwenty);
             appendDomTag.append(perPageContainerDom);
-          case 42:
+          case 39:
           case "end":
             return _context2.stop();
         }

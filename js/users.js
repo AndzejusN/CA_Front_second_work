@@ -129,19 +129,15 @@ function generatePaginationToDom(_x3) {
 }
 function _generatePaginationToDom() {
   _generatePaginationToDom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(dataToPagination) {
-    var currentPage, appendDomTag, source, numberPerPage, queryString, dataTotal, total, paginationWrapper, limit, pages, i, span, a, _span, _a, _span2, _a2, _span3, _a3, _span4, _a4, perPageContainerDom, linkPerPageFive, linkPerPageTen, linkPerPageTwenty;
+    var currentPage, appendDomTag, numberPerPage, total, queryString, paginationWrapper, limit, pages, i, span, a, _span, _a, _span2, _a2, _span3, _a3, _span4, _a4, perPageContainerDom, linkPerPageFive, linkPerPageTen, linkPerPageTwenty;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, source = dataToPagination.source, numberPerPage = dataToPagination.numberPerPage;
+            currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, numberPerPage = dataToPagination.numberPerPage, total = dataToPagination.total;
             currentPage = parseInt(currentPage);
             queryString = window.location.pathname;
-            _context2.next = 5;
-            return fetchData(source);
-          case 5:
-            dataTotal = _context2.sent;
-            total = dataTotal.length;
+            total = total.toString();
             paginationWrapper = document.createElement('div');
             paginationWrapper.style.width = '100%';
             paginationWrapper.style.display = 'flex';
@@ -268,7 +264,7 @@ function _generatePaginationToDom() {
             linkPerPageTwenty.style.margin = '0 3px';
             perPageContainerDom.append(linkPerPageTwenty);
             appendDomTag.append(perPageContainerDom);
-          case 42:
+          case 39:
           case "end":
             return _context2.stop();
         }
@@ -449,7 +445,7 @@ function userPageDom(_x) {
 }
 function _userPageDom() {
   _userPageDom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(userId) {
-    var container, currentPage, numberPerPage, data, source, dataToPagination;
+    var container, currentPage, numberPerPage, data, total, response, dataToPagination;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -458,32 +454,37 @@ function _userPageDom() {
             currentPage = (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_page') ? (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_page') : 1;
             numberPerPage = (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_limit') ? (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_limit') : 10;
             data = {};
+            total = 0;
             if (!userId) {
-              _context2.next = 10;
+              _context2.next = 11;
               break;
             }
-            _context2.next = 7;
+            _context2.next = 8;
             return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.fetchData)("https://jsonplaceholder.typicode.com/users?userId=".concat(userId));
-          case 7:
+          case 8:
             data = _context2.sent;
-            _context2.next = 13;
+            _context2.next = 18;
             break;
-          case 10:
-            _context2.next = 12;
-            return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.fetchData)("https://jsonplaceholder.typicode.com/users?_page=".concat(currentPage, "&_limit=").concat(numberPerPage));
-          case 12:
-            data = _context2.sent;
+          case 11:
+            _context2.next = 13;
+            return fetch("https://jsonplaceholder.typicode.com/users?_page=".concat(currentPage, "&_limit=").concat(numberPerPage));
           case 13:
-            source = "https://jsonplaceholder.typicode.com/users";
+            response = _context2.sent;
+            total = response.headers.get('x-total-count');
+            _context2.next = 17;
+            return response.json();
+          case 17:
+            data = _context2.sent;
+          case 18:
             dataToPagination = {
               currentPage: currentPage,
               appendDomTag: container,
-              source: source,
-              numberPerPage: numberPerPage
+              numberPerPage: numberPerPage,
+              total: total
             };
-            _context2.next = 17;
+            _context2.next = 21;
             return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.generatePaginationToDom)(dataToPagination);
-          case 17:
+          case 21:
             data.map(function (user) {
               var address = user.address.street + ' ' + user.address.suite + ' ' + user.address.zipcode + ', ' + user.address.city;
               var userDataToDom = {
@@ -502,7 +503,7 @@ function _userPageDom() {
               };
               generatePostsList(userDataToDom);
             });
-          case 18:
+          case 22:
           case "end":
             return _context2.stop();
         }

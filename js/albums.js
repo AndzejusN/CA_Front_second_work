@@ -129,19 +129,15 @@ function generatePaginationToDom(_x3) {
 }
 function _generatePaginationToDom() {
   _generatePaginationToDom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(dataToPagination) {
-    var currentPage, appendDomTag, source, numberPerPage, queryString, dataTotal, total, paginationWrapper, limit, pages, i, span, a, _span, _a, _span2, _a2, _span3, _a3, _span4, _a4, perPageContainerDom, linkPerPageFive, linkPerPageTen, linkPerPageTwenty;
+    var currentPage, appendDomTag, numberPerPage, total, queryString, paginationWrapper, limit, pages, i, span, a, _span, _a, _span2, _a2, _span3, _a3, _span4, _a4, perPageContainerDom, linkPerPageFive, linkPerPageTen, linkPerPageTwenty;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, source = dataToPagination.source, numberPerPage = dataToPagination.numberPerPage;
+            currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, numberPerPage = dataToPagination.numberPerPage, total = dataToPagination.total;
             currentPage = parseInt(currentPage);
             queryString = window.location.pathname;
-            _context2.next = 5;
-            return fetchData(source);
-          case 5:
-            dataTotal = _context2.sent;
-            total = dataTotal.length;
+            total = total.toString();
             paginationWrapper = document.createElement('div');
             paginationWrapper.style.width = '100%';
             paginationWrapper.style.display = 'flex';
@@ -268,7 +264,7 @@ function _generatePaginationToDom() {
             linkPerPageTwenty.style.margin = '0 3px';
             perPageContainerDom.append(linkPerPageTwenty);
             appendDomTag.append(perPageContainerDom);
-          case 42:
+          case 39:
           case "end":
             return _context2.stop();
         }
@@ -450,7 +446,7 @@ function fetchDataAlbums(_x) {
 }
 function _fetchDataAlbums() {
   _fetchDataAlbums = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(leftColumn) {
-    var currentPage, numberPerPage, data, source, dataToPagination;
+    var currentPage, numberPerPage, response, total, data, dataToPagination;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -458,19 +454,23 @@ function _fetchDataAlbums() {
             currentPage = (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_page') ? (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_page') : 1;
             numberPerPage = (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_limit') ? (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_limit') : 20;
             _context2.next = 4;
-            return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.fetchData)("https://jsonplaceholder.typicode.com/albums?_expand=user&_embed=photos&_page=".concat(currentPage, "&_limit=").concat(numberPerPage));
+            return fetch("https://jsonplaceholder.typicode.com/albums?_expand=user&_embed=photos&_page=".concat(currentPage, "&_limit=").concat(numberPerPage));
           case 4:
+            response = _context2.sent;
+            total = response.headers.get('x-total-count');
+            _context2.next = 8;
+            return response.json();
+          case 8:
             data = _context2.sent;
-            source = "https://jsonplaceholder.typicode.com/albums";
             dataToPagination = {
               currentPage: currentPage,
               appendDomTag: leftColumn,
-              source: source,
-              numberPerPage: numberPerPage
+              numberPerPage: numberPerPage,
+              total: total
             };
-            _context2.next = 9;
+            _context2.next = 12;
             return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.generatePaginationToDom)(dataToPagination);
-          case 9:
+          case 12:
             data.map(function (album) {
               var numberOfPhotos = album.photos.length;
               var firstPhotoAddress = album.photos[0].thumbnailUrl;
@@ -488,7 +488,7 @@ function _fetchDataAlbums() {
               generateAlbumsList(albumsDataToDom, leftColumn);
               generateAllPhotosList(photoes);
             });
-          case 10:
+          case 13:
           case "end":
             return _context2.stop();
         }
