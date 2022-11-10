@@ -47,8 +47,11 @@ function fetchData(_x, _x2) {
 function _fetchData() {
   _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(url, obj) {
     var methodSend,
-      _response,
-      response,
+      res,
+      _total,
+      _data,
+      total,
+      data,
       _args = arguments;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) {
@@ -56,7 +59,7 @@ function _fetchData() {
           case 0:
             methodSend = _args.length > 2 && _args[2] !== undefined ? _args[2] : 'POST';
             if (!obj) {
-              _context.next = 8;
+              _context.next = 10;
               break;
             }
             _context.next = 4;
@@ -68,21 +71,31 @@ function _fetchData() {
               }
             });
           case 4:
-            _response = _context.sent;
-            _context.next = 7;
-            return _response.json();
-          case 7:
-            return _context.abrupt("return", _context.sent);
+            res = _context.sent;
+            _total = res.headers.get('x-total-count');
+            _context.next = 8;
+            return res.json();
           case 8:
-            _context.next = 10;
-            return fetch(url);
+            _data = _context.sent;
+            return _context.abrupt("return", {
+              data: _data,
+              total: _total
+            });
           case 10:
-            response = _context.sent;
-            _context.next = 13;
-            return response.json();
-          case 13:
-            return _context.abrupt("return", _context.sent);
-          case 14:
+            _context.next = 12;
+            return fetch(url);
+          case 12:
+            res = _context.sent;
+            total = res.headers.get('x-total-count');
+            _context.next = 16;
+            return res.json();
+          case 16:
+            data = _context.sent;
+            return _context.abrupt("return", {
+              data: data,
+              total: total
+            });
+          case 18:
           case "end":
             return _context.stop();
         }
@@ -137,7 +150,7 @@ function _generatePaginationToDom() {
             currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, numberPerPage = dataToPagination.numberPerPage, total = dataToPagination.total;
             currentPage = parseInt(currentPage);
             queryString = window.location.pathname;
-            total = total.toString();
+            total = parseInt(total);
             paginationWrapper = document.createElement('div');
             paginationWrapper.style.width = '100%';
             paginationWrapper.style.display = 'flex';
@@ -446,7 +459,7 @@ function fetchDataAlbums(_x) {
 }
 function _fetchDataAlbums() {
   _fetchDataAlbums = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(leftColumn) {
-    var currentPage, numberPerPage, response, total, data, dataToPagination;
+    var currentPage, numberPerPage, res, total, data, dataToPagination;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -454,23 +467,20 @@ function _fetchDataAlbums() {
             currentPage = (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_page') ? (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_page') : 1;
             numberPerPage = (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_limit') ? (0,_functions__WEBPACK_IMPORTED_MODULE_1__.getSearchPhrase)('_limit') : 20;
             _context2.next = 4;
-            return fetch("https://jsonplaceholder.typicode.com/albums?_expand=user&_embed=photos&_page=".concat(currentPage, "&_limit=").concat(numberPerPage));
+            return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.fetchData)("https://jsonplaceholder.typicode.com/albums?_expand=user&_embed=photos&_page=".concat(currentPage, "&_limit=").concat(numberPerPage));
           case 4:
-            response = _context2.sent;
-            total = response.headers.get('x-total-count');
-            _context2.next = 8;
-            return response.json();
-          case 8:
-            data = _context2.sent;
+            res = _context2.sent;
+            total = res.total;
+            data = res.data;
             dataToPagination = {
               currentPage: currentPage,
               appendDomTag: leftColumn,
               numberPerPage: numberPerPage,
               total: total
             };
-            _context2.next = 12;
+            _context2.next = 10;
             return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.generatePaginationToDom)(dataToPagination);
-          case 12:
+          case 10:
             data.map(function (album) {
               var numberOfPhotos = album.photos.length;
               var firstPhotoAddress = album.photos[0].thumbnailUrl;
@@ -488,7 +498,7 @@ function _fetchDataAlbums() {
               generateAlbumsList(albumsDataToDom, leftColumn);
               generateAllPhotosList(photoes);
             });
-          case 13:
+          case 11:
           case "end":
             return _context2.stop();
         }

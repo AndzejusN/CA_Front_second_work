@@ -47,8 +47,11 @@ function fetchData(_x, _x2) {
 function _fetchData() {
   _fetchData = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(url, obj) {
     var methodSend,
-      _response,
-      response,
+      res,
+      _total,
+      _data,
+      total,
+      data,
       _args = arguments;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) {
@@ -56,7 +59,7 @@ function _fetchData() {
           case 0:
             methodSend = _args.length > 2 && _args[2] !== undefined ? _args[2] : 'POST';
             if (!obj) {
-              _context.next = 8;
+              _context.next = 10;
               break;
             }
             _context.next = 4;
@@ -68,21 +71,31 @@ function _fetchData() {
               }
             });
           case 4:
-            _response = _context.sent;
-            _context.next = 7;
-            return _response.json();
-          case 7:
-            return _context.abrupt("return", _context.sent);
+            res = _context.sent;
+            _total = res.headers.get('x-total-count');
+            _context.next = 8;
+            return res.json();
           case 8:
-            _context.next = 10;
-            return fetch(url);
+            _data = _context.sent;
+            return _context.abrupt("return", {
+              data: _data,
+              total: _total
+            });
           case 10:
-            response = _context.sent;
-            _context.next = 13;
-            return response.json();
-          case 13:
-            return _context.abrupt("return", _context.sent);
-          case 14:
+            _context.next = 12;
+            return fetch(url);
+          case 12:
+            res = _context.sent;
+            total = res.headers.get('x-total-count');
+            _context.next = 16;
+            return res.json();
+          case 16:
+            data = _context.sent;
+            return _context.abrupt("return", {
+              data: data,
+              total: total
+            });
+          case 18:
           case "end":
             return _context.stop();
         }
@@ -137,7 +150,7 @@ function _generatePaginationToDom() {
             currentPage = dataToPagination.currentPage, appendDomTag = dataToPagination.appendDomTag, numberPerPage = dataToPagination.numberPerPage, total = dataToPagination.total;
             currentPage = parseInt(currentPage);
             queryString = window.location.pathname;
-            total = total.toString();
+            total = parseInt(total);
             paginationWrapper = document.createElement('div');
             paginationWrapper.style.width = '100%';
             paginationWrapper.style.display = 'flex';
@@ -446,6 +459,7 @@ function userPageDom() {
 function _userPageDom() {
   _userPageDom = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
     var id,
+      res,
       userData,
       address,
       userDataToDom,
@@ -458,7 +472,8 @@ function _userPageDom() {
             _context2.next = 3;
             return (0,_functions__WEBPACK_IMPORTED_MODULE_1__.fetchData)("https://jsonplaceholder.typicode.com/users/".concat(id));
           case 3:
-            userData = _context2.sent;
+            res = _context2.sent;
+            userData = res.data;
             address = userData.address.street + ' ' + userData.address.suite + ' ' + userData.address.zipcode + ', ' + userData.address.city;
             userDataToDom = {
               'name': userData.name,
@@ -474,7 +489,7 @@ function _userPageDom() {
               'company': userData.company.name
             };
             generatePostsList(userDataToDom);
-          case 7:
+          case 8:
           case "end":
             return _context2.stop();
         }
